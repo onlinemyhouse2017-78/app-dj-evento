@@ -13,10 +13,10 @@
       margin: 0;
     }
     .contenedor {
-      max-width: 600px;
+      max-width: 650px;
       margin: 0 auto;
     }
-    h1 { color: #1db954; }
+    h1 { color: #1db954; text-align: center; }
     .caja-control {
       background-color: #1e1e1e;
       padding: 20px;
@@ -36,14 +36,26 @@
     }
     .activo { background-color: #1db954; color: white; }
     .inactivo { background-color: #e74c3c; color: white; }
+    
     .tarjeta-cancion {
       background-color: #2a2a2a;
       border-left: 5px solid #1db954;
       padding: 15px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       border-radius: 8px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .info-cancion {
+      flex: 1;
+      min-width: 200px;
+    }
+    .acciones {
+      display: flex;
+      gap: 8px;
       align-items: center;
     }
     .btn-spotify {
@@ -53,18 +65,32 @@
       border-radius: 6px;
       text-decoration: none;
       font-weight: bold;
-      margin-right: 5px;
-      font-size: 14px;
+      font-size: 13px;
       display: inline-block;
     }
+    .btn-spotify:hover { background-color: #1ed760; }
+    .btn-youtube {
+      background-color: #ff0000;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 13px;
+      display: inline-block;
+    }
+    .btn-youtube:hover { background-color: #cc0000; }
     .btn-borrar {
-      background-color: #ff4d4d;
+      background-color: #555;
       color: white;
       border: none;
       padding: 8px 12px;
       border-radius: 6px;
       cursor: pointer;
+      font-weight: bold;
+      font-size: 13px;
     }
+    .btn-borrar:hover { background-color: #ff4d4d; }
   </style>
 </head>
 <body>
@@ -129,24 +155,30 @@
 
       const datos = snapshot.val();
       if (!datos) {
-        contenedor.innerHTML = "<p>No hay canciones en la lista aún.</p>";
+        contenedor.innerHTML = "<p style='color:#bbb;'>No hay canciones en la lista aún.</p>";
         return;
       }
 
       Object.keys(datos).forEach((key) => {
         const item = datos[key];
+        
+        // Enlaces de búsqueda automática
         const busquedaSpotify = `https://open.spotify.com/search/${encodeURIComponent(item.cancion)}`;
+        const busquedaYoutube = `https://www.youtube.com/results?search_query=${encodeURIComponent(item.cancion)}`;
 
         const div = document.createElement("div");
         div.className = "tarjeta-cancion";
         div.innerHTML = `
-          <div>
+          <div class="info-cancion">
             <strong>🎶 ${item.cancion}</strong><br>
             <small style="color:#bbb">Pedida por: ${item.invitado} [${item.fecha}]</small>
           </div>
-          <div>
+          <div class="acciones">
             <a href="${busquedaSpotify}" target="_blank" class="btn-spotify">
               🟢 Spotify
+            </a>
+            <a href="${busquedaYoutube}" target="_blank" class="btn-youtube">
+              🔴 YouTube
             </a>
             <button class="btn-borrar" onclick="eliminarCancion('${key}')">Eliminar</button>
           </div>
@@ -155,7 +187,7 @@
       });
     });
 
-    // Eliminar canción tocada
+    // Eliminar canción
     function eliminarCancion(id) {
       db.ref("peticiones/" + id).remove();
     }
