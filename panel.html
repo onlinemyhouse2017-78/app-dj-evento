@@ -123,8 +123,11 @@
         return;
       }
 
-      Object.keys(datos).forEach((key) => {
+Object.keys(datos).forEach((key) => {
         const item = datos[key];
+        // Enlace automático de búsqueda en Spotify
+        const busquedaSpotify = `https://open.spotify.com/search/${encodeURIComponent(item.cancion)}`;
+
         const div = document.createElement("div");
         div.className = "tarjeta-cancion";
         div.innerHTML = `
@@ -132,9 +135,15 @@
             <strong>🎶 ${item.cancion}</strong><br>
             <small style="color:#bbb">Pedida por: ${item.invitado} [${item.fecha}]</small>
           </div>
-          <button class="btn-borrar" onclick="eliminarCancion('${key}')">Eliminar</button>
+          <div>
+            <a href="${busquedaSpotify}" target="_blank" style="background-color: #1db954; color: white; padding: 8px 12px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-right: 5px; font-size: 14px; display: inline-block;">
+              🟢 Spotify
+            </a>
+            <button class="btn-borrar" onclick="eliminarCancion('${key}')">Eliminar</button>
+          </div>
         `;
         contenedor.appendChild(div);
+      });
       });
     });
 
