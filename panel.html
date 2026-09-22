@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Control - DJ</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0f0f0f;
+      color: white;
+      padding: 20px;
+      margin: 0;
+    }
+    .contenedor {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h1 { color: #1db954; }
+    .caja-control {
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn-toggle {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .activo { background-color: #1db954; color: white; }
+    .inactivo { background-color: #e74c3c; color: white; }
+    .tarjeta-cancion {
+      background-color: #2a2a2a;
+      border-left: 5px solid #1db954;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn-borrar {
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="contenedor">
+    <h1>🎛️ Panel de Control - DJ</h1>
+
+    <!-- Switch Encendido / Apagado -->
+    <div class="caja-control">
+      <span><strong>Recepción de pedidos (QR):</strong></span>
+      <button id="btnEstado" class="btn-toggle activo" onclick="cambiarEstadoQR()">Cargando...</button>
+    </div>
+
+    <h2>📜 Lista de Canciones Pedidas</h2>
+    <div id="lista-canciones">Cargando pedidos...</div>
+  </div>
+
+  <!-- Conexión a Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <script>
+    // ⚠️ REEMPLAZA ESTE BLOQUE CON TUS MISMAS LLAVES DE FIREBASE DE PASO 6:
+ const firebaseConfig = {
+  apiKey: "AIzaSyDGbqAffr9eoeFmTwCVNTO6qSOwaJmQkHw",
+  authDomain: "appdjevento.firebaseapp.com",
+  databaseURL: "https://appdjevento-default-rtdb.firebaseio.com",
+  projectId: "appdjevento",
+  storageBucket: "appdjevento.firebasestorage.app",
+  messagingSenderId: "407123662465",
+  appId: "1:407123662465:web:7920863152e086a221df80"
+};
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let estadoActualQR = true;
+
+    // Escuchar el estado del QR en tiempo real
+    db.ref("estadoQR").on("value", (snapshot) => {
+      const val = snapshot.val();
+      estadoActualQR = val !== false; // Por defecto activo si es nulo
+
+      const btn = document.getElementById("btnEstado");
+      if (estadoActualQR) {
+        btn.textContent = "🟢 ACTIVADO (Recibiendo)";
+        btn.className = "btn-toggle activo";
+      } else {
+        btn.textContent = "🔴 DESACTIVADO (Bloqueado)";
+        btn.className = "btn-toggle inactivo";
+      }
+    });
+
+    // Función para prender/apagar el QR
+    function cambiarEstadoQR() {
+      db.ref("estadoQR").set(!estadoActualQR);
+    }
+
+    // Escuchar las canciones pedidas en tiempo real
+    db.ref("peticiones").on("value", (snapshot) => {
+      const contenedor = document.getElementById("lista-canciones");
+      contenedor.innerHTML = "";
+
+      const datos = snapshot.val();
+      if (!datos) {
+        contenedor.innerHTML = "<p>No hay canciones en la lista aún.</p>";
+        return;
+      }
+
+      Object.keys(datos).forEach((key) => {
+        const item = datos[key];
+        const div = document.createElement("div");
+        div.className = "tarjeta-cancion";
+        div.innerHTML = `
+          <div>
+            <strong>🎶 ${item.cancion}</strong><br>
+            <small style="color:#bbb">Pedida por: ${item.invitado} [${item.fecha}]</small>
+          </div>
+          <button class="btn-borrar" onclick="eliminarCancion('${key}')">Eliminar</button>
+        `;
+        contenedor.appendChild(div);
+      });
+    });
+
+    // Eliminar canción tocada
+    function eliminarCancion(id) {
+      db.ref("peticiones/" + id).remove();
+    }
+  </script>
+
+</body>
+</html>
