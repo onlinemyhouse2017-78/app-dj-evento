@@ -14,7 +14,7 @@
       text-align: center;
     }
     .contenedor {
-      max-width: 400px;
+      max-width: 420px;
       margin: 0 auto;
       background-color: #1e1e1e;
       padding: 25px;
@@ -22,24 +22,30 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
     h1 { color: #1db954; font-size: 24px; margin-bottom: 5px; }
-    p { color: #bbb; font-size: 14px; }
+    p { color: #bbb; font-size: 14px; margin-bottom: 15px; }
     
-    .btn-spotify-buscar {
+    .caja-busqueda {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .btn-plataforma {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background-color: #1db954;
-      color: white;
       text-decoration: none;
       font-weight: bold;
-      padding: 10px 15px;
+      padding: 10px 14px;
       border-radius: 20px;
-      margin-bottom: 20px;
-      font-size: 14px;
+      font-size: 13px;
+      color: white;
+      transition: opacity 0.2s;
     }
-    .btn-spotify-buscar:hover {
-      background-color: #1ed760;
-    }
+    .btn-spotify { background-color: #1db954; }
+    .btn-youtube { background-color: #ff0000; }
+    .btn-plataforma:hover { opacity: 0.85; }
 
     input {
       width: 100%;
@@ -80,12 +86,17 @@
 
   <div class="contenedor">
     <h1>🎧 Pide tu Canción al DJ</h1>
-    <p>¡Escribe la canción que quieres escuchar en el evento!</p>
+    <p>¡Busca el nombre de la canción o pídela directamente!</p>
 
-    <!-- Botón directo a Spotify para los invitados -->
-    <a href="https://open.spotify.com" target="_blank" class="btn-spotify-buscar">
-      🟢 Buscar nombre en Spotify
-    </a>
+    <!-- Botones directos a plataformas para los invitados -->
+    <div class="caja-busqueda">
+      <a href="https://open.spotify.com" target="_blank" class="btn-plataforma btn-spotify">
+        🟢 Abrir Spotify
+      </a>
+      <a href="https://www.youtube.com" target="_blank" class="btn-plataforma btn-youtube">
+        🔴 Abrir YouTube
+      </a>
+    </div>
 
     <div id="formulario">
       <input type="text" id="invitado" placeholder="Tu nombre / apodo" required>
