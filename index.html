@@ -7,51 +7,71 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #121212;
+      background-color: #0f0f0f;
       color: white;
-      text-align: center;
       padding: 20px;
       margin: 0;
+      text-align: center;
     }
     .contenedor {
       max-width: 400px;
-      margin: 30px auto;
+      margin: 0 auto;
       background-color: #1e1e1e;
       padding: 25px;
-      border-radius: 15px;
+      border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
     h1 { color: #1db954; font-size: 24px; margin-bottom: 5px; }
-    p { color: #b3b3b3; font-size: 14px; }
+    p { color: #bbb; font-size: 14px; }
+    
+    .btn-spotify-buscar {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #1db954;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 10px 15px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .btn-spotify-buscar:hover {
+      background-color: #1ed760;
+    }
+
     input {
-      width: 90%;
+      width: 100%;
       padding: 12px;
       margin: 10px 0;
       border-radius: 8px;
       border: 1px solid #333;
       background-color: #2a2a2a;
       color: white;
-      font-size: 16px;
       box-sizing: border-box;
+      font-size: 16px;
     }
-    button {
-      width: 90%;
-      padding: 14px;
+    button.btn-enviar {
+      width: 100%;
+      padding: 12px;
       background-color: #1db954;
       color: white;
       border: none;
-      border-radius: 25px;
-      font-size: 16px;
+      border-radius: 8px;
       font-weight: bold;
+      font-size: 16px;
       cursor: pointer;
       margin-top: 10px;
     }
-    .mensaje-bloqueado {
-      display: none;
-      background-color: #333;
-      padding: 20px;
-      border-radius: 12px;
-      color: #ff5555;
+    button.btn-enviar:hover { background-color: #1ed760; }
+    
+    #mensaje {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    .cerrado {
+      color: #ff4d4d;
       font-weight: bold;
     }
   </style>
@@ -59,74 +79,86 @@
 <body>
 
   <div class="contenedor">
-    <h1>🎧 Pide tu Canción</h1>
-    <p>Escribe el nombre del tema que quieres escuchar</p>
+    <h1>🎧 Pide tu Canción al DJ</h1>
+    <p>¡Escribe la canción que quieres escuchar en el evento!</p>
 
-    <!-- Formulario para pedir canciones -->
-    <div id="seccion-pedido">
-      <input type="text" id="nombreInvitado" placeholder="Tu nombre (opcional)">
-      <input type="text" id="cancion" placeholder="Canción y Artista">
-      <button onclick="enviarCancion()">Enviar Petición 🔥</button>
+    <!-- Botón directo a Spotify para los invitados -->
+    <a href="https://open.spotify.com" target="_blank" class="btn-spotify-buscar">
+      🟢 Buscar nombre en Spotify
+    </a>
+
+    <div id="formulario">
+      <input type="text" id="invitado" placeholder="Tu nombre / apodo" required>
+      <input type="text" id="cancion" placeholder="Nombre de la canción y artista" required>
+      <button class="btn-enviar" onclick="enviarPedido()">Enviar Pedido 🚀</button>
     </div>
 
-    <!-- Mensaje cuando el DJ apaga las peticiones -->
-    <div id="seccion-cerrada" class="mensaje-bloqueado">
-      🚫 El DJ ha desactivado temporalmente la recepción de canciones.
-    </div>
+    <div id="mensaje"></div>
   </div>
 
-  <!-- Conexión a Firebase Realtime Database -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <script>
-    // ⚠️ REEMPLAZA EL BLOQUE DE ABAJO CON TUS LLAVES DEL PASO 6:
-   const firebaseConfig = {
-  apiKey: "AIzaSyDGbqAffr9eoeFmTwCVNTO6qSOwaJmQkHw",
-  authDomain: "appdjevento.firebaseapp.com",
-  databaseURL: "https://appdjevento-default-rtdb.firebaseio.com",
-  projectId: "appdjevento",
-  storageBucket: "appdjevento.firebasestorage.app",
-  messagingSenderId: "407123662465",
-  appId: "1:407123662465:web:7920863152e086a221df80"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyDGbqAffr9eoeFmTwCVNTO6qSOwaJmQkHw",
+      authDomain: "appdjevento.firebaseapp.com",
+      databaseURL: "https://appdjevento-default-rtdb.firebaseio.com",
+      projectId: "appdjevento",
+      storageBucket: "appdjevento.firebasestorage.app",
+      messagingSenderId: "407123662465",
+      appId: "1:407123662465:web:7920863152e086a221df80"
+    };
 
-    // Inicializar Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // Comprobar en tiempo real si el DJ activó o desactivó el QR
+    let receptorActivo = true;
+
+    // Verificar si el DJ tiene abiertos los pedidos
     db.ref("estadoQR").on("value", (snapshot) => {
-      const activo = snapshot.val();
-      if (activo === false) {
-        document.getElementById("seccion-pedido").style.display = "none";
-        document.getElementById("seccion-cerrada").style.display = "block";
+      const val = snapshot.val();
+      receptorActivo = val !== false;
+
+      const form = document.getElementById("formulario");
+      const msg = document.getElementById("mensaje");
+
+      if (!receptorActivo) {
+        form.style.display = "none";
+        msg.innerHTML = "<p class='cerrado'>🚫 La recepción de pedidos está pausada por el DJ en este momento.</p>";
       } else {
-        document.getElementById("seccion-pedido").style.display = "block";
-        document.getElementById("seccion-cerrada").style.display = "none";
+        form.style.display = "block";
+        msg.innerHTML = "";
       }
     });
 
-    // Función para enviar la canción
-    function enviarCancion() {
-      const tema = document.getElementById("cancion").value.trim();
-      const invitado = document.getElementById("nombreInvitado").value.trim() || "Anónimo";
+    // Enviar canción a Firebase
+    function enviarPedido() {
+      const invitado = document.getElementById("invitado").value.trim();
+      const cancion = document.getElementById("cancion").value.trim();
+      const msg = document.getElementById("mensaje");
 
-      if (tema === "") {
-        alert("Por favor escribe el nombre de una canción.");
+      if (!invitado || !cancion) {
+        msg.style.color = "#ff4d4d";
+        msg.textContent = "Por favor completa ambos campos.";
         return;
       }
 
-      // Guardar en Realtime Database
+      const ahora = new Date();
+      const hora = ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
       db.ref("peticiones").push({
         invitado: invitado,
-        cancion: tema,
-        fecha: new Date().toLocaleTimeString()
+        cancion: cancion,
+        fecha: hora
       }).then(() => {
-        alert("¡Canción enviada al DJ con éxito!");
+        msg.style.color = "#1db954";
+        msg.textContent = "¡Pedido enviado con éxito! 🎶";
         document.getElementById("cancion").value = "";
-      }).catch((error) => {
-        alert("Error al enviar: " + error.message);
+      }).catch((err) => {
+        msg.style.color = "#ff4d4d";
+        msg.textContent = "Error al enviar. Intenta de nuevo.";
       });
     }
   </script>
