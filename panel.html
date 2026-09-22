@@ -46,6 +46,17 @@
       justify-content: space-between;
       align-items: center;
     }
+    .btn-spotify {
+      background-color: #1db954;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-right: 5px;
+      font-size: 14px;
+      display: inline-block;
+    }
     .btn-borrar {
       background-color: #ff4d4d;
       color: white;
@@ -76,16 +87,15 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <script>
-    // ⚠️ REEMPLAZA ESTE BLOQUE CON TUS MISMAS LLAVES DE FIREBASE DE PASO 6:
- const firebaseConfig = {
-  apiKey: "AIzaSyDGbqAffr9eoeFmTwCVNTO6qSOwaJmQkHw",
-  authDomain: "appdjevento.firebaseapp.com",
-  databaseURL: "https://appdjevento-default-rtdb.firebaseio.com",
-  projectId: "appdjevento",
-  storageBucket: "appdjevento.firebasestorage.app",
-  messagingSenderId: "407123662465",
-  appId: "1:407123662465:web:7920863152e086a221df80"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyDGbqAffr9eoeFmTwCVNTO6qSOwaJmQkHw",
+      authDomain: "appdjevento.firebaseapp.com",
+      databaseURL: "https://appdjevento-default-rtdb.firebaseio.com",
+      projectId: "appdjevento",
+      storageBucket: "appdjevento.firebasestorage.app",
+      messagingSenderId: "407123662465",
+      appId: "1:407123662465:web:7920863152e086a221df80"
+    };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
@@ -95,7 +105,7 @@
     // Escuchar el estado del QR en tiempo real
     db.ref("estadoQR").on("value", (snapshot) => {
       const val = snapshot.val();
-      estadoActualQR = val !== false; // Por defecto activo si es nulo
+      estadoActualQR = val !== false;
 
       const btn = document.getElementById("btnEstado");
       if (estadoActualQR) {
@@ -123,9 +133,8 @@
         return;
       }
 
-Object.keys(datos).forEach((key) => {
+      Object.keys(datos).forEach((key) => {
         const item = datos[key];
-        // Enlace automático de búsqueda en Spotify
         const busquedaSpotify = `https://open.spotify.com/search/${encodeURIComponent(item.cancion)}`;
 
         const div = document.createElement("div");
@@ -136,14 +145,13 @@ Object.keys(datos).forEach((key) => {
             <small style="color:#bbb">Pedida por: ${item.invitado} [${item.fecha}]</small>
           </div>
           <div>
-            <a href="${busquedaSpotify}" target="_blank" style="background-color: #1db954; color: white; padding: 8px 12px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-right: 5px; font-size: 14px; display: inline-block;">
+            <a href="${busquedaSpotify}" target="_blank" class="btn-spotify">
               🟢 Spotify
             </a>
             <button class="btn-borrar" onclick="eliminarCancion('${key}')">Eliminar</button>
           </div>
         `;
         contenedor.appendChild(div);
-      });
       });
     });
 
