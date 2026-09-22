@@ -47,16 +47,21 @@
     .btn-youtube { background-color: #ff0000; }
     .btn-plataforma:hover { opacity: 0.85; }
 
-    input {
+    input, textarea {
       width: 100%;
       padding: 12px;
-      margin: 10px 0;
+      margin: 8px 0;
       border-radius: 8px;
       border: 1px solid #333;
       background-color: #2a2a2a;
       color: white;
       box-sizing: border-box;
-      font-size: 16px;
+      font-size: 15px;
+      font-family: inherit;
+    }
+    textarea {
+      resize: vertical;
+      height: 70px;
     }
     button.btn-enviar {
       width: 100%;
@@ -101,6 +106,7 @@
     <div id="formulario">
       <input type="text" id="invitado" placeholder="Tu nombre / apodo" required>
       <input type="text" id="cancion" placeholder="Nombre de la canción y artista" required>
+      <textarea id="nota" placeholder="💬 Mensaje o dedicatoria para el DJ (opcional)"></textarea>
       <button class="btn-enviar" onclick="enviarPedido()">Enviar Pedido 🚀</button>
     </div>
 
@@ -148,11 +154,12 @@
     function enviarPedido() {
       const invitado = document.getElementById("invitado").value.trim();
       const cancion = document.getElementById("cancion").value.trim();
+      const nota = document.getElementById("nota").value.trim();
       const msg = document.getElementById("mensaje");
 
       if (!invitado || !cancion) {
         msg.style.color = "#ff4d4d";
-        msg.textContent = "Por favor completa ambos campos.";
+        msg.textContent = "Por favor completa tu nombre y la canción.";
         return;
       }
 
@@ -162,11 +169,13 @@
       db.ref("peticiones").push({
         invitado: invitado,
         cancion: cancion,
+        nota: nota,
         fecha: hora
       }).then(() => {
         msg.style.color = "#1db954";
-        msg.textContent = "¡Pedido enviado con éxito! 🎶";
+        msg.textContent = "¡Pedido y mensaje enviados con éxito! 🎶";
         document.getElementById("cancion").value = "";
+        document.getElementById("nota").value = "";
       }).catch((err) => {
         msg.style.color = "#ff4d4d";
         msg.textContent = "Error al enviar. Intenta de nuevo.";
