@@ -53,6 +53,16 @@
       flex: 1;
       min-width: 200px;
     }
+    .mensaje-invitado {
+      background-color: #332b00;
+      color: #ffd700;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-top: 6px;
+      display: inline-block;
+      border: 1px solid #665200;
+    }
     .acciones {
       display: flex;
       gap: 8px;
@@ -166,12 +176,16 @@
         const busquedaSpotify = `https://open.spotify.com/search/${encodeURIComponent(item.cancion)}`;
         const busquedaYoutube = `https://www.youtube.com/results?search_query=${encodeURIComponent(item.cancion)}`;
 
+        // Renderizar nota si existe
+        const htmlNota = item.nota ? `<div class="mensaje-invitado">💬 Nota: "${item.nota}"</div>` : '';
+
         const div = document.createElement("div");
         div.className = "tarjeta-cancion";
         div.innerHTML = `
           <div class="info-cancion">
             <strong>🎶 ${item.cancion}</strong><br>
-            <small style="color:#bbb">Pedida por: ${item.invitado} [${item.fecha}]</small>
+            <small style="color:#bbb">Pedida por: ${item.invitado} [${item.fecha}]</small><br>
+            ${htmlNota}
           </div>
           <div class="acciones">
             <a href="${busquedaSpotify}" target="_blank" class="btn-spotify">
