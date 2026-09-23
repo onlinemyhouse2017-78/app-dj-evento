@@ -14,7 +14,7 @@
       text-align: center;
     }
     .contenedor {
-      max-width: 420px;
+      max-width: 450px;
       margin: 0 auto;
       background-color: #1e1e1e;
       padding: 25px;
@@ -61,7 +61,7 @@
     }
     textarea {
       resize: vertical;
-      height: 70px;
+      height: 60px;
     }
     button.btn-enviar {
       width: 100%;
@@ -85,6 +85,36 @@
       color: #ff4d4d;
       font-weight: bold;
     }
+
+    /* Estilos para la lista pública de canciones */
+    .seccion-lista {
+      margin-top: 25px;
+      border-top: 1px solid #333;
+      padding-top: 20px;
+      text-align: left;
+    }
+    .seccion-lista h3 {
+      color: #1db954;
+      font-size: 18px;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .tarjeta-invitado {
+      background-color: #2a2a2a;
+      border-left: 4px solid #1db954;
+      padding: 10px 12px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .tarjeta-invitado strong {
+      color: #fff;
+    }
+    .tarjeta-invitado small {
+      color: #bbb;
+      display: block;
+      margin-top: 2px;
+    }
   </style>
 </head>
 <body>
@@ -93,7 +123,7 @@
     <h1>🎧 Pide tu Canción al DJ</h1>
     <p>¡Busca el nombre de la canción o pídela directamente!</p>
 
-    <!-- Botones directos a plataformas para los invitados -->
+    <!-- Botones directos a plataformas -->
     <div class="caja-busqueda">
       <a href="https://open.spotify.com" target="_blank" class="btn-plataforma btn-spotify">
         🟢 Abrir Spotify
@@ -111,6 +141,12 @@
     </div>
 
     <div id="mensaje"></div>
+
+    <!-- Lista en tiempo real de lo que han pedido otros -->
+    <div class="seccion-lista">
+      <h3>📜 Canciones en Cola</h3>
+      <div id="lista-publica">Cargando cola de reproducción...</div>
+    </div>
   </div>
 
   <!-- Firebase SDK -->
@@ -133,7 +169,7 @@
 
     let receptorActivo = true;
 
-    // Verificar si el DJ tiene abiertos los pedidos
+    // Escuchar si el DJ tiene abiertos los pedidos
     db.ref("estadoQR").on("value", (snapshot) => {
       const val = snapshot.val();
       receptorActivo = val !== false;
@@ -148,6 +184,29 @@
         form.style.display = "block";
         msg.innerHTML = "";
       }
+    });
+
+    // Escuchar peticiones en tiempo real para la lista de invitados
+    db.ref("peticiones").on("value", (snapshot) => {
+      const contenedor = document.getElementById("lista-publica");
+      contenedor.innerHTML = "";
+
+      const datos = snapshot.val();
+      if (!datos) {
+        contenedor.innerHTML = "<p style='color:#bbb; text-align:center;'>Aún no hay canciones en la lista. ¡Sé el primero!</p>";
+        return;
+      }
+
+      Object.keys(datos).forEach((key) => {
+        const item = datos[key];
+        const div = document.createElement("div");
+        div.className = "tarjeta-invitado";
+        div.innerHTML = `
+          <strong>🎶 ${item.cancion}</strong>
+          <small>Pedida por: ${item.invitado} [${item.fecha}]</small>
+        `;
+        contenedor.appendChild(div);
+      });
     });
 
     // Enviar canción a Firebase
@@ -173,7 +232,7 @@
         fecha: hora
       }).then(() => {
         msg.style.color = "#1db954";
-        msg.textContent = "¡Pedido y mensaje enviados con éxito! 🎶";
+        msg.textContent = "¡Pedido enviado con éxito! 🎶";
         document.getElementById("cancion").value = "";
         document.getElementById("nota").value = "";
       }).catch((err) => {
