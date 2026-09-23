@@ -3,153 +3,268 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pedir Canción al DJ</title>
+  <title>Pide tu Canción - Evento DJ</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #0f0f0f;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0d001a 0%, #1a0033 50%, #000000 100%);
       color: white;
-      padding: 20px;
+      padding: 20px 10px;
       margin: 0;
-      text-align: center;
+      min-height: 100vh;
+      box-sizing: border-box;
     }
+
     .contenedor {
-      max-width: 450px;
+      max-width: 500px;
       margin: 0 auto;
-      background-color: #1e1e1e;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      background: rgba(25, 20, 35, 0.85);
+      backdrop-filter: blur(10px);
+      padding: 25px 20px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px 0 rgba(0, 255, 204, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
-    h1 { color: #1db954; font-size: 24px; margin-bottom: 5px; }
-    p { color: #bbb; font-size: 14px; margin-bottom: 15px; }
-    
-    .caja-busqueda {
+
+    h1 {
+      color: #00ffcc;
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 5px;
+      font-size: 26px;
+      text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+    }
+
+    p.subtitulo {
+      text-align: center;
+      color: #bbb;
+      margin-bottom: 15px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* BARRA SUPERIOR DE ACCESO RÁPIDO A SPOTIFY Y YOUTUBE */
+    .barra-accesos-superiores {
       display: flex;
-      justify-content: center;
       gap: 10px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-    .btn-plataforma {
-      display: inline-flex;
-      align-items: center;
       justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .btn-reproductor-top {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
       text-decoration: none;
       font-weight: bold;
-      padding: 10px 14px;
-      border-radius: 20px;
-      font-size: 13px;
-      color: white;
-      transition: opacity 0.2s;
+      font-size: 14px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    .btn-spotify { background-color: #1db954; }
-    .btn-youtube { background-color: #ff0000; }
-    .btn-plataforma:hover { opacity: 0.85; }
+
+    .btn-reproductor-top:active {
+      transform: scale(0.97);
+    }
+
+    .btn-spotify-top {
+      background: #1db954;
+      color: white;
+    }
+
+    .btn-youtube-top {
+      background: #ff0000;
+      color: white;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+      color: #00ffcc;
+      font-size: 14px;
+    }
 
     input, textarea {
       width: 100%;
       padding: 12px;
-      margin: 8px 0;
+      margin-top: 5px;
       border-radius: 8px;
       border: 1px solid #333;
-      background-color: #2a2a2a;
+      background: rgba(0, 0, 0, 0.6);
       color: white;
       box-sizing: border-box;
-      font-size: 15px;
-      font-family: inherit;
-    }
-    textarea {
-      resize: vertical;
-      height: 60px;
-    }
-    button.btn-enviar {
-      width: 100%;
-      padding: 12px;
-      background-color: #1db954;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    button.btn-enviar:hover { background-color: #1ed760; }
-    
-    #mensaje {
-      margin-top: 15px;
-      font-weight: bold;
-    }
-    .cerrado {
-      color: #ff4d4d;
-      font-weight: bold;
-    }
-
-    /* Estilos para la lista pública de canciones */
-    .seccion-lista {
-      margin-top: 25px;
-      border-top: 1px solid #333;
-      padding-top: 20px;
-      text-align: left;
-    }
-    .seccion-lista h3 {
-      color: #1db954;
-      font-size: 18px;
-      margin-bottom: 12px;
-      text-align: center;
-    }
-    .tarjeta-invitado {
-      background-color: #2a2a2a;
-      border-left: 4px solid #1db954;
-      padding: 10px 12px;
-      border-radius: 6px;
-      margin-bottom: 8px;
       font-size: 14px;
     }
-    .tarjeta-invitado strong {
-      color: #fff;
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #ff007f;
+      box-shadow: 0 0 8px rgba(255, 0, 127, 0.5);
     }
-    .tarjeta-invitado small {
-      color: #bbb;
-      display: block;
-      margin-top: 2px;
+
+    button.btn-enviar {
+      width: 100%;
+      background: linear-gradient(90deg, #ff007f 0%, #7928ca 100%);
+      color: white;
+      border: none;
+      padding: 14px;
+      margin-top: 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 0, 127, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button.btn-enviar:active {
+      transform: scale(0.98);
+    }
+
+    /* Termómetro / Encuesta de la fiesta */
+    .caja-termometro {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: center;
+    }
+
+    .caja-termometro h3 {
+      margin-top: 0;
+      color: #ff007f;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+
+    .botones-animo {
+      display: flex;
+      justify-content: space-around;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .btn-animo {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid #ff007f;
+      color: white;
+      padding: 10px 5px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: background 0.2s;
+    }
+
+    .btn-animo:hover {
+      background: rgba(255, 0, 127, 0.3);
+    }
+
+    /* Lista de canciones pedidas */
+    .caja-lista {
+      margin-top: 30px;
+    }
+
+    .caja-lista h2 {
+      color: #00ffcc;
+      font-size: 18px;
+      border-bottom: 1px solid rgba(0, 255, 204, 0.3);
+      padding-bottom: 8px;
+    }
+
+    .tarjeta-cancion {
+      background: rgba(255, 255, 255, 0.05);
+      border-left: 4px solid #ff007f;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+    }
+
+    .info-cancion {
+      margin-bottom: 4px;
+    }
+
+    .mensaje-invitado {
+      color: #ff007f;
+      font-size: 13px;
+      font-style: italic;
+      margin-top: 4px;
+    }
+
+    .mensaje-bloqueado {
+      text-align: center;
+      color: #ff0055;
+      font-size: 13px;
+      padding: 10px;
+      background: rgba(255, 0, 85, 0.1);
+      border-radius: 8px;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
 
   <div class="contenedor">
-    <h1>🎧 Pide tu Canción al DJ</h1>
-    <p>¡Busca el nombre de la canción o pídela directamente!</p>
+    <h1 id="titulo-principal">🎧 Pide tu Canción</h1>
+    <p class="subtitulo" id="subtitulo-principal">PUEDES ACUDIR A YOUTUBE O SPOTIFY PARA BUSCAR TU CANCIÓN 👇👇</p>
 
-    <!-- Botones directos a plataformas -->
-    <div class="caja-busqueda">
-      <a href="https://open.spotify.com" target="_blank" class="btn-plataforma btn-spotify">
+    <!-- ACCESOS SUPERIORES (SE OCULTAN SI EL DJ INHABILITA LAS CANCIONES) -->
+    <div id="barra-accesos" class="barra-accesos-superiores">
+      <a href="https://open.spotify.com" target="_blank" class="btn-reproductor-top btn-spotify-top">
         🟢 Abrir Spotify
       </a>
-      <a href="https://www.youtube.com" target="_blank" class="btn-plataforma btn-youtube">
+      <a href="https://www.youtube.com" target="_blank" class="btn-reproductor-top btn-youtube-top">
         🔴 Abrir YouTube
       </a>
     </div>
 
-    <div id="formulario">
-      <input type="text" id="invitado" placeholder="Tu nombre / apodo" required>
-      <input type="text" id="cancion" placeholder="Nombre de la canción y artista" required>
-      <textarea id="nota" placeholder="💬 Mensaje o dedicatoria para el DJ (opcional)"></textarea>
-      <button class="btn-enviar" onclick="enviarPedido()">Enviar Pedido 🚀</button>
+    <!-- FORMULARIO DE PETICIÓN -->
+    <div id="seccion-formulario">
+      <div id="campo-cancion">
+        <label for="cancion">🎵 Canción y Artista:</label>
+        <input type="text" id="cancion" placeholder="Ej: Duki - She Don't Give a FO">
+      </div>
+
+      <div id="campo-mensaje">
+        <label for="nota">💬 Mensaje / Dedicatoria / Sugerencia: 👇</label>
+        <textarea id="nota" rows="2" placeholder="Ej: ¡Un saludo para la mesa 4! o Tu sugerencia..."></textarea>
+      </div>
+
+      <label for="invitado">👤 Tu Nombre:</label>
+      <input type="text" id="invitado" placeholder="Ej: Lucas">
+
+      <button id="btnEnviar" class="btn-enviar" onclick="enviarPeticion()">Enviar al DJ 🚀</button>
     </div>
 
-    <div id="mensaje"></div>
+    <!-- MENSAJE DE SECCIÓN DESACTIVADA -->
+    <div id="msg-desactivado" class="mensaje-bloqueado" style="display: none;">
+      🔒 La recepción de peticiones/mensajes ha sido pausada momentáneamente por el DJ.
+    </div>
 
-    <!-- Lista en tiempo real de lo que han pedido otros -->
-    <div class="seccion-lista">
-      <h3>📜 Canciones en Cola</h3>
-      <div id="lista-publica">Cargando cola de reproducción...</div>
+    <!-- TERMÓMETRO / ENCUESTA DE LA FIESTA -->
+    <div id="seccion-termometro" class="caja-termometro">
+      <h3>🔥 ¿QUÉ TE PARECIÓ LA FIESTA? DÉJANOS TU SUGERENCIA AQUÍ 👇</h3>
+      <div class="botones-animo">
+        <button class="btn-animo" onclick="votar('fuego')">🔥 ¡Explotada!</button>
+        <button class="btn-animo" onclick="votar('fiesta')">🥳 ¡De diez!</button>
+        <button class="btn-animo" onclick="votar('aburrido')">🥱 Metan ritmo</button>
+      </div>
+    </div>
+
+    <!-- LISTA DE CANCIONES Y MENSAJES -->
+    <div class="caja-lista">
+      <h2>📜 Lista de Canciones en Espera</h2>
+      <div id="lista-canciones">Cargando la lista de temas...</div>
     </div>
   </div>
 
-  <!-- Firebase SDK -->
+  <!-- FIREBASE SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -167,79 +282,123 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let receptorActivo = true;
+    let configSecciones = {
+      habCanciones: true,
+      habMensajes: true,
+      habTermometro: true
+    };
 
-    // Escuchar si el DJ tiene abiertos los pedidos
-    db.ref("estadoQR").on("value", (snapshot) => {
-      const val = snapshot.val();
-      receptorActivo = val !== false;
+    // Escuchar la configuración activada por el DJ
+    db.ref("configSecciones").on("value", (snapshot) => {
+      const cfg = snapshot.val() || {};
+      
+      configSecciones.habCanciones = cfg.habCanciones !== false;
+      configSecciones.habMensajes = cfg.habMensajes !== false;
+      configSecciones.habTermometro = cfg.habTermometro !== false;
 
-      const form = document.getElementById("formulario");
-      const msg = document.getElementById("mensaje");
+      // Cambiar título y ocultar/mostrar botones de accesos según el estado de las canciones
+      const titulo = document.getElementById("titulo-principal");
+      const subtitulo = document.getElementById("subtitulo-principal");
+      const barraAccesos = document.getElementById("barra-accesos");
 
-      if (!receptorActivo) {
-        form.style.display = "none";
-        msg.innerHTML = "<p class='cerrado'>🚫 La recepción de pedidos está pausada por el DJ en este momento.</p>";
+      if (configSecciones.habCanciones) {
+        titulo.textContent = "🎧 Pide tu Canción";
+        subtitulo.textContent = "PUEDES ACUDIR A YOUTUBE O SPOTIFY PARA BUSCAR TU CANCIÓN 👇👇";
+        barraAccesos.style.display = "flex";
       } else {
-        form.style.display = "block";
-        msg.innerHTML = "";
+        titulo.textContent = "💬 NOS INTERESA TU OPINIÓN";
+        subtitulo.textContent = "Déjanos tu mensaje, comentario o sugerencia para la fiesta";
+        barraAccesos.style.display = "none";
       }
+
+      // Mostrar/Ocultar campos
+      document.getElementById("campo-cancion").style.display = configSecciones.habCanciones ? "block" : "none";
+      document.getElementById("campo-mensaje").style.display = configSecciones.habMensajes ? "block" : "none";
+      document.getElementById("seccion-termometro").style.display = configSecciones.habTermometro ? "block" : "none";
+
+      // Si todo está deshabilitado
+      const ambasDesactivadas = !configSecciones.habCanciones && !configSecciones.habMensajes;
+      document.getElementById("btnEnviar").style.display = ambasDesactivadas ? "none" : "block";
+      document.getElementById("msg-desactivado").style.display = ambasDesactivadas ? "block" : "none";
     });
 
-    // Escuchar peticiones en tiempo real para la lista de invitados
+    // Enviar Petición
+    function enviarPeticion() {
+      const cancionInput = document.getElementById("cancion").value.trim();
+      const notaInput = document.getElementById("nota").value.trim();
+      const invitadoInput = document.getElementById("invitado").value.trim();
+
+      if (!invitadoInput) {
+        alert("Por favor ingresa tu nombre.");
+        return;
+      }
+
+      if (configSecciones.habCanciones && !cancionInput && !notaInput) {
+        alert("Por favor ingresa al menos una canción o un mensaje.");
+        return;
+      }
+
+      const cancionFinal = cancionInput !== "" ? cancionInput : "Sin canción (Solo mensaje)";
+
+      const nuevaPeticion = {
+        cancion: cancionFinal,
+        nota: notaInput,
+        invitado: invitadoInput,
+        fecha: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        orden: Date.now()
+      };
+
+      db.ref("peticiones").push(nuevaPeticion, (error) => {
+        if (error) {
+          alert("Error al enviar: " + error.message);
+        } else {
+          alert("¡Tu mensaje fue enviado con éxito!");
+          document.getElementById("cancion").value = "";
+          document.getElementById("nota").value = "";
+        }
+      });
+    }
+
+    // Votar en el Termómetro
+    function votar(tipo) {
+      db.ref("votos_animo/" + tipo).transaction((actual) => {
+        return (actual || 0) + 1;
+      }, (error, committed) => {
+        if (committed) {
+          alert("¡Gracias por tu voto! 🎉");
+        }
+      });
+    }
+
+    // Escuchar y Renderizar Peticiones en Tiempo Real
     db.ref("peticiones").on("value", (snapshot) => {
-      const contenedor = document.getElementById("lista-publica");
+      const contenedor = document.getElementById("lista-canciones");
       contenedor.innerHTML = "";
 
       const datos = snapshot.val();
       if (!datos) {
-        contenedor.innerHTML = "<p style='color:#bbb; text-align:center;'>Aún no hay canciones en la lista. ¡Sé el primero!</p>";
+        contenedor.innerHTML = "<p style='color:#aaa; text-align:center;'>Aún no hay canciones en la lista. ¡Sé el primero en pedir una!</p>";
         return;
       }
 
-      Object.keys(datos).forEach((key) => {
-        const item = datos[key];
+      const lista = Object.keys(datos).map(key => datos[key])
+                          .sort((a, b) => (a.orden || 0) - (b.orden || 0));
+
+      lista.forEach((item, index) => {
+        const htmlNota = item.nota ? `<div class="mensaje-invitado">💬 "${item.nota}"</div>` : '';
+
         const div = document.createElement("div");
-        div.className = "tarjeta-invitado";
+        div.className = "tarjeta-cancion";
         div.innerHTML = `
-          <strong>🎶 ${item.cancion}</strong>
-          <small>Pedida por: ${item.invitado} [${item.fecha}]</small>
+          <div class="info-cancion">
+            <strong>#${index + 1} 🎶 ${item.cancion}</strong><br>
+            <small style="color:#aaa">Pedida por: ${item.invitado}</small>
+            ${htmlNota}
+          </div>
         `;
         contenedor.appendChild(div);
       });
     });
-
-    // Enviar canción a Firebase
-    function enviarPedido() {
-      const invitado = document.getElementById("invitado").value.trim();
-      const cancion = document.getElementById("cancion").value.trim();
-      const nota = document.getElementById("nota").value.trim();
-      const msg = document.getElementById("mensaje");
-
-      if (!invitado || !cancion) {
-        msg.style.color = "#ff4d4d";
-        msg.textContent = "Por favor completa tu nombre y la canción.";
-        return;
-      }
-
-      const ahora = new Date();
-      const hora = ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-      db.ref("peticiones").push({
-        invitado: invitado,
-        cancion: cancion,
-        nota: nota,
-        fecha: hora
-      }).then(() => {
-        msg.style.color = "#1db954";
-        msg.textContent = "¡Pedido enviado con éxito! 🎶";
-        document.getElementById("cancion").value = "";
-        document.getElementById("nota").value = "";
-      }).catch((err) => {
-        msg.style.color = "#ff4d4d";
-        msg.textContent = "Error al enviar. Intenta de nuevo.";
-      });
-    }
   </script>
 
 </body>
