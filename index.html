@@ -38,17 +38,17 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        /* Animación suave para la tarjeta principal */
         .container:hover {
             box-shadow: 0 0 35px rgba(255, 0, 220, 0.35), inset 0 0 20px rgba(0, 243, 255, 0.25);
         }
 
         h1 { 
-            font-size: 1.7rem; 
+            font-size: 1.5rem; 
             color: #ff00dc; 
             text-shadow: 0 0 10px #ff00dc, 0 0 20px #ff00dc;
             text-align: center; 
             margin-bottom: 5px; 
+            text-transform: uppercase;
         }
 
         .estado-conexion { display: block; text-align: center; font-size: 0.75rem; margin-bottom: 15px; font-weight: bold; }
@@ -85,7 +85,6 @@
             overflow-y: auto;
         }
 
-        /* Animación interactiva en los ítems de canciones en vivo */
         .item-vivo {
             font-size: 0.85rem;
             background: rgba(30, 41, 59, 0.7);
@@ -127,7 +126,6 @@
         .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
         label { font-size: 0.85rem; color: #cbd5e1; font-weight: 600; }
 
-        /* Animación en los inputs y textareas */
         input, textarea { 
             width: 100%; 
             padding: 12px; 
@@ -156,7 +154,6 @@
 
         .termometro-container { display: flex; justify-content: space-around; margin: 10px 0 15px 0; }
         
-        /* Animación mejorada en las opciones de votos/emojis */
         .emoji-option { 
             font-size: 2rem; 
             cursor: pointer; 
@@ -198,11 +195,9 @@
         .btn-spotify { background-color: #1db954; box-shadow: 0 0 8px rgba(29, 185, 84, 0.5); }
         .btn-youtube { background-color: #ff0000; box-shadow: 0 0 8px rgba(255, 0, 0, 0.5); }
         
-        /* Animación suave para los enlaces sociales al pasar cursor */
         .btn-spotify:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 0 15px rgba(29, 185, 84, 0.8); }
         .btn-youtube:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 0 15px rgba(255, 0, 0, 0.8); }
 
-        /* Animación para el botón principal de envío */
         .btn-submit { 
             width: 100%; 
             padding: 14px; 
@@ -235,7 +230,7 @@
 <body>
 
     <div class="container">
-        <h1>🎵 Pide tu Canción</h1>
+        <h1 id="titulo-principal">🎵 Pide tu Canción</h1>
         <span id="estado-conexion" class="estado-conexion offline">🔴 Conectando a Firebase...</span>
 
         <div class="seccion-vivo">
@@ -303,7 +298,7 @@
 
         const configRef = firebase.database().ref('configSecciones');
         const peticionesRef = firebase.database().ref('peticiones');
-        const votosRef = firebase.database().ref('votos');
+        const votosRef = firebase.database().ref('votos_animo');
 
         firebase.database().ref('.info/connected').on('value', (snap) => {
             const estadoEl = document.getElementById('estado-conexion');
@@ -318,12 +313,20 @@
 
         let peticionesHabilitadas = true;
         let termometroHabilitado = true;
-        let emojiSeleccionado = null; // Inicializado en null para validar el voto obligatorio
+        let emojiSeleccionado = null;
 
         configRef.on('value', (snapshot) => {
             const config = snapshot.val() || {};
             peticionesHabilitadas = config.peticionesActivas !== false;
             termometroHabilitado = config.termometroActivo !== false;
+
+            // Cambio dinámico del título según el estado de "Termómetro y Mensajes"
+            const tituloEl = document.getElementById('titulo-principal');
+            if (termometroHabilitado) {
+                tituloEl.textContent = "NOS INTERESA TU OPINIÓN Y SUGERENCIAS";
+            } else {
+                tituloEl.textContent = "🎵 Pide tu Canción";
+            }
 
             document.getElementById('sec-reproductores').style.display = peticionesHabilitadas ? 'flex' : 'none';
             document.getElementById('sec-peticion').style.display = peticionesHabilitadas ? 'flex' : 'none';

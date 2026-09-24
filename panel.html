@@ -251,9 +251,9 @@
             firebase.initializeApp(firebaseConfig);
         }
 
-       const configRef = firebase.database().ref('configSecciones');
+        const configRef = firebase.database().ref('configSecciones');
         const peticionesRef = firebase.database().ref('peticiones');
-        const votosRef = firebase.database().ref('votos');
+        const votosRef = firebase.database().ref('votos_animo');
         const listaUI = document.getElementById('lista-canciones');
         let arrayPeticiones = [];
 
@@ -343,7 +343,6 @@
             arrayPeticiones.forEach((item, index) => {
                 const li = document.createElement('li');
 
-                // Si NO contiene canción, se muestra como mensaje directo con su voto asociado
                 if (!item.tema) {
                     li.className = 'item-mensaje-solo';
                     li.innerHTML = `
@@ -354,7 +353,6 @@
                         <button class="btn-eliminar-msg" onclick="eliminarPeticion('${item.key}')">✖ Borrar</button>
                     `;
                 } else {
-                    // Si trae canción, mantiene las flechas de orden, checkbox y badge de estado
                     const estaTocada = item.tocada || false;
                     li.className = 'item-cancion' + (estaTocada ? ' tocada' : '');
                     li.innerHTML = `
