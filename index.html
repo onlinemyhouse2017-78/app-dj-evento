@@ -1,405 +1,437 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pide tu Canción - Evento DJ</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #0d001a 0%, #1a0033 50%, #000000 100%);
-      color: white;
-      padding: 20px 10px;
-      margin: 0;
-      min-height: 100vh;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pide tu Canción - Evento</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body { 
+            background: linear-gradient(-45deg, #0f051d, #00112c, #1f002b, #002233); 
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+            color: #f8fafc; 
+            padding: 20px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
 
-    .contenedor {
-      max-width: 500px;
-      margin: 0 auto;
-      background: rgba(25, 20, 35, 0.85);
-      backdrop-filter: blur(10px);
-      padding: 25px 20px;
-      border-radius: 20px;
-      box-shadow: 0 8px 32px 0 rgba(0, 255, 204, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-    h1 {
-      color: #00ffcc;
-      text-align: center;
-      margin-top: 0;
-      margin-bottom: 5px;
-      font-size: 26px;
-      text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
-    }
+        .container { 
+            width: 100%; 
+            max-width: 480px; 
+            background: rgba(15, 23, 42, 0.78); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 25px; 
+            border-radius: 16px; 
+            border: 1px solid rgba(255, 0, 220, 0.3);
+            box-shadow: 0 0 25px rgba(255, 0, 220, 0.25), inset 0 0 15px rgba(0, 243, 255, 0.15); 
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-    p.subtitulo {
-      text-align: center;
-      color: #bbb;
-      margin-bottom: 15px;
-      font-size: 14px;
-      font-weight: 500;
-    }
+        /* Animación suave para la tarjeta principal */
+        .container:hover {
+            box-shadow: 0 0 35px rgba(255, 0, 220, 0.35), inset 0 0 20px rgba(0, 243, 255, 0.25);
+        }
 
-    /* BARRA SUPERIOR DE ACCESO RÁPIDO A SPOTIFY Y YOUTUBE */
-    .barra-accesos-superiores {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
+        h1 { 
+            font-size: 1.7rem; 
+            color: #ff00dc; 
+            text-shadow: 0 0 10px #ff00dc, 0 0 20px #ff00dc;
+            text-align: center; 
+            margin-bottom: 5px; 
+        }
 
-    .btn-reproductor-top {
-      flex: 1;
-      padding: 12px;
-      border-radius: 10px;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 14px;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
+        .estado-conexion { display: block; text-align: center; font-size: 0.75rem; margin-bottom: 15px; font-weight: bold; }
+        .online { color: #34d399; text-shadow: 0 0 5px #34d399; }
+        .offline { color: #f87171; text-shadow: 0 0 5px #f87171; }
 
-    .btn-reproductor-top:active {
-      transform: scale(0.97);
-    }
+        .seccion-vivo {
+            background-color: rgba(5, 5, 20, 0.8);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.1);
+            transition: border-color 0.3s ease;
+        }
 
-    .btn-spotify-top {
-      background: #1db954;
-      color: white;
-    }
+        .seccion-vivo:hover {
+            border-color: rgba(0, 243, 255, 0.6);
+        }
 
-    .btn-youtube-top {
-      background: #ff0000;
-      color: white;
-    }
+        .titulo-vivo {
+            font-size: 0.85rem;
+            color: #00f3ff;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 0 5px #00f3ff;
+        }
+        .lista-vivo {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 160px;
+            overflow-y: auto;
+        }
 
-    label {
-      display: block;
-      margin-top: 12px;
-      font-weight: bold;
-      color: #00ffcc;
-      font-size: 14px;
-    }
+        /* Animación interactiva en los ítems de canciones en vivo */
+        .item-vivo {
+            font-size: 0.85rem;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 8px 10px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-    input, textarea {
-      width: 100%;
-      padding: 12px;
-      margin-top: 5px;
-      border-radius: 8px;
-      border: 1px solid #333;
-      background: rgba(0, 0, 0, 0.6);
-      color: white;
-      box-sizing: border-box;
-      font-size: 14px;
-    }
+        .item-vivo:hover {
+            transform: translateX(4px) scale(1.01);
+            background: rgba(30, 41, 59, 0.95);
+            border-color: rgba(0, 243, 255, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
 
-    input:focus, textarea:focus {
-      outline: none;
-      border-color: #ff007f;
-      box-shadow: 0 0 8px rgba(255, 0, 127, 0.5);
-    }
+        .item-vivo.tocada { opacity: 0.4; }
+        .item-vivo.tocada .nombre-tema { text-decoration: line-through; }
+        
+        .badge-v {
+            font-size: 0.65rem;
+            font-weight: bold;
+            padding: 3px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            transition: transform 0.2s ease;
+        }
 
-    button.btn-enviar {
-      width: 100%;
-      background: linear-gradient(90deg, #ff007f 0%, #7928ca 100%);
-      color: white;
-      border: none;
-      padding: 14px;
-      margin-top: 20px;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(255, 0, 127, 0.4);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
+        .item-vivo:hover .badge-v {
+            transform: scale(1.08);
+        }
 
-    button.btn-enviar:active {
-      transform: scale(0.98);
-    }
+        .badge-v-pendiente { background-color: #f59e0b; color: #0f172a; box-shadow: 0 0 5px #f59e0b; }
+        .badge-v-tocada { background-color: #10b981; color: #ffffff; box-shadow: 0 0 5px #10b981; }
 
-    /* Termómetro / Encuesta de la fiesta */
-    .caja-termometro {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
-      padding: 15px;
-      margin-top: 25px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      text-align: center;
-    }
+        .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        label { font-size: 0.85rem; color: #cbd5e1; font-weight: 600; }
 
-    .caja-termometro h3 {
-      margin-top: 0;
-      color: #ff007f;
-      font-size: 16px;
-      line-height: 1.4;
-    }
+        /* Animación en los inputs y textareas */
+        input, textarea { 
+            width: 100%; 
+            padding: 12px; 
+            border-radius: 8px; 
+            border: 1px solid rgba(0, 243, 255, 0.3); 
+            background-color: rgba(5, 5, 20, 0.8); 
+            color: #ffffff; 
+            font-size: 1rem; 
+            outline: none; 
+            transition: all 0.25s ease; 
+        }
 
-    .botones-animo {
-      display: flex;
-      justify-content: space-around;
-      gap: 10px;
-      margin-top: 10px;
-    }
+        input:hover, textarea:hover {
+            border-color: rgba(0, 243, 255, 0.6);
+            background-color: rgba(5, 5, 30, 0.9);
+            box-shadow: 0 0 8px rgba(0, 243, 255, 0.2);
+        }
 
-    .btn-animo {
-      flex: 1;
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid #ff007f;
-      color: white;
-      padding: 10px 5px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 13px;
-      transition: background 0.2s;
-    }
+        input:focus, textarea:focus { 
+            border-color: #ff00dc; 
+            box-shadow: 0 0 12px rgba(255, 0, 220, 0.5); 
+            background-color: rgba(10, 5, 30, 0.95);
+        }
 
-    .btn-animo:hover {
-      background: rgba(255, 0, 127, 0.3);
-    }
+        textarea { resize: none; height: 70px; }
 
-    /* Lista de canciones pedidas */
-    .caja-lista {
-      margin-top: 30px;
-    }
+        .termometro-container { display: flex; justify-content: space-around; margin: 10px 0 15px 0; }
+        
+        /* Animación mejorada en las opciones de votos/emojis */
+        .emoji-option { 
+            font-size: 2rem; 
+            cursor: pointer; 
+            opacity: 0.35; 
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            user-select: none; 
+            display: inline-block;
+        }
 
-    .caja-lista h2 {
-      color: #00ffcc;
-      font-size: 18px;
-      border-bottom: 1px solid rgba(0, 255, 204, 0.3);
-      padding-bottom: 8px;
-    }
+        .emoji-option:hover { 
+            transform: scale(1.3) translateY(-3px); 
+            opacity: 0.85;
+            filter: drop-shadow(0 0 8px rgba(0, 243, 255, 0.6));
+        }
 
-    .tarjeta-cancion {
-      background: rgba(255, 255, 255, 0.05);
-      border-left: 4px solid #ff007f;
-      padding: 12px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-    }
+        .emoji-option.selected { 
+            opacity: 1; 
+            transform: scale(1.4) translateY(-2px); 
+            filter: drop-shadow(0 0 12px #ff00dc); 
+        }
 
-    .info-cancion {
-      margin-bottom: 4px;
-    }
+        .social-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+        .btn-link { 
+            flex: 1; 
+            padding: 10px; 
+            border-radius: 8px; 
+            text-decoration: none; 
+            color: white; 
+            font-weight: bold; 
+            font-size: 0.85rem; 
+            text-align: center; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 5px; 
+            transition: all 0.25s ease; 
+        }
 
-    .mensaje-invitado {
-      color: #ff007f;
-      font-size: 13px;
-      font-style: italic;
-      margin-top: 4px;
-    }
+        .btn-spotify { background-color: #1db954; box-shadow: 0 0 8px rgba(29, 185, 84, 0.5); }
+        .btn-youtube { background-color: #ff0000; box-shadow: 0 0 8px rgba(255, 0, 0, 0.5); }
+        
+        /* Animación suave para los enlaces sociales al pasar cursor */
+        .btn-spotify:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 0 15px rgba(29, 185, 84, 0.8); }
+        .btn-youtube:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 0 15px rgba(255, 0, 0, 0.8); }
 
-    .mensaje-bloqueado {
-      text-align: center;
-      color: #ff0055;
-      font-size: 13px;
-      padding: 10px;
-      background: rgba(255, 0, 85, 0.1);
-      border-radius: 8px;
-      margin-top: 10px;
-    }
-  </style>
+        /* Animación para el botón principal de envío */
+        .btn-submit { 
+            width: 100%; 
+            padding: 14px; 
+            background: linear-gradient(90deg, #ff00dc, #00f3ff); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 0.95rem; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: all 0.25s ease; 
+            box-shadow: 0 0 15px rgba(255, 0, 220, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-submit:hover { 
+            transform: translateY(-2px) scale(1.02); 
+            box-shadow: 0 0 25px rgba(255, 0, 220, 0.85), 0 0 10px rgba(0, 243, 255, 0.6); 
+        }
+
+        .btn-submit:active {
+            transform: translateY(0) scale(0.99);
+        }
+
+        .mensaje-exito { display: none; margin-top: 15px; padding: 12px; background-color: rgba(6, 78, 59, 0.9); color: #34d399; border: 1px solid #34d399; border-radius: 8px; font-size: 0.9rem; font-weight: 600; text-align: center; box-shadow: 0 0 10px #34d399; }
+        .mensaje-cerrado { display: none; text-align: center; color: #ef4444; padding: 15px; background: rgba(69, 26, 26, 0.9); border: 1px solid #ef4444; border-radius: 8px; font-weight: bold; box-shadow: 0 0 10px #ef4444; }
+    </style>
 </head>
 <body>
 
-  <div class="contenedor">
-    <h1 id="titulo-principal">🎧 Pide tu Canción</h1>
-    <p class="subtitulo" id="subtitulo-principal">PUEDES ACUDIR A YOUTUBE O SPOTIFY PARA BUSCAR TU CANCIÓN 👇👇</p>
+    <div class="container">
+        <h1>🎵 Pide tu Canción</h1>
+        <span id="estado-conexion" class="estado-conexion offline">🔴 Conectando a Firebase...</span>
 
-    <!-- ACCESOS SUPERIORES (SE OCULTAN SI EL DJ INHABILITA LAS CANCIONES) -->
-    <div id="barra-accesos" class="barra-accesos-superiores">
-      <a href="https://open.spotify.com" target="_blank" class="btn-reproductor-top btn-spotify-top">
-        🟢 Abrir Spotify
-      </a>
-      <a href="https://www.youtube.com" target="_blank" class="btn-reproductor-top btn-youtube-top">
-        🔴 Abrir YouTube
-      </a>
+        <div class="seccion-vivo">
+            <div class="titulo-vivo">📋 Peticiones en Vivo:</div>
+            <ul id="lista-peticiones-vivo" class="lista-vivo">
+                <li style="font-size: 0.8rem; color: #64748b; text-align: center;">Cargando lista...</li>
+            </ul>
+        </div>
+
+        <div class="social-buttons" id="sec-reproductores">
+            <a href="https://open.spotify.com" target="_blank" class="btn-link btn-spotify">🎧 Abrir Spotify</a>
+            <a href="https://www.youtube.com" target="_blank" class="btn-link btn-youtube">▶️ Abrir YouTube</a>
+        </div>
+
+        <form id="form-pedir">
+            <div class="form-group">
+                <label for="nombre">Tu Nombre o Apodo (Opcional)</label>
+                <input type="text" id="nombre" placeholder="Ej: Lucas / La mesa 4">
+            </div>
+
+            <div class="form-group" id="sec-peticion">
+                <label for="cancion">Artista - Canción</label>
+                <input type="text" id="cancion" placeholder="Ej: Luck Ra - La Morocha" autocomplete="off">
+            </div>
+
+            <div id="sec-termometro-mensaje">
+                <div class="form-group">
+                    <label>¿Qué tal la fiesta? (Selecciona tu voto):</label>
+                    <div class="termometro-container">
+                        <span class="emoji-option" onclick="seleccionarEmoji('😴', this)" title="Aburrida">😴</span>
+                        <span class="emoji-option" onclick="seleccionarEmoji('🔥', this)" title="Buena">🔥</span>
+                        <span class="emoji-option" onclick="seleccionarEmoji('🚀', this)" title="¡Explotada!">🚀</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="mensaje-sugerencia">Mensaje o Sugerencia</label>
+                    <textarea id="mensaje-sugerencia" placeholder="Ej: ¡Manda un saludo para el cumpleañero!"></textarea>
+                </div>
+            </div>
+
+            <div id="aviso-cerrado" class="mensaje-cerrado">
+                El DJ ha pausado las peticiones por el momento.
+            </div>
+
+            <button type="submit" class="btn-submit" id="btn-enviar">ENVIALE TU VOTO Y MENSAJE AL DJ 🚀</button>
+        </form>
+
+        <div id="mensaje-confirmacion" class="mensaje-exito">
+            ¡Voto y mensaje enviados al DJ! 🎧
+        </div>
     </div>
 
-    <!-- FORMULARIO DE PETICIÓN -->
-    <div id="seccion-formulario">
-      <div id="campo-cancion">
-        <label for="cancion">🎵 Canción y Artista:</label>
-        <input type="text" id="cancion" placeholder="Ej: Duki - She Don't Give a FO">
-      </div>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-      <div id="campo-mensaje">
-        <label for="nota">💬 Mensaje / Dedicatoria / Sugerencia: 👇</label>
-        <textarea id="nota" rows="2" placeholder="Ej: ¡Un saludo para la mesa 4! o Tu sugerencia..."></textarea>
-      </div>
+    <script>
+        const firebaseConfig = {
+            databaseURL: "https://appdjevento-default-rtdb.firebaseio.com"
+        };
 
-      <label for="invitado">👤 Tu Nombre:</label>
-      <input type="text" id="invitado" placeholder="Ej: Lucas">
-
-      <button id="btnEnviar" class="btn-enviar" onclick="enviarPeticion()">Enviar al DJ 🚀</button>
-    </div>
-
-    <!-- MENSAJE DE SECCIÓN DESACTIVADA -->
-    <div id="msg-desactivado" class="mensaje-bloqueado" style="display: none;">
-      🔒 La recepción de peticiones/mensajes ha sido pausada momentáneamente por el DJ.
-    </div>
-
-    <!-- TERMÓMETRO / ENCUESTA DE LA FIESTA -->
-    <div id="seccion-termometro" class="caja-termometro">
-      <h3>🔥 ¿QUÉ TE PARECIÓ LA FIESTA? DÉJANOS TU SUGERENCIA AQUÍ 👇</h3>
-      <div class="botones-animo">
-        <button class="btn-animo" onclick="votar('fuego')">🔥 ¡Explotada!</button>
-        <button class="btn-animo" onclick="votar('fiesta')">🥳 ¡De diez!</button>
-        <button class="btn-animo" onclick="votar('aburrido')">🥱 Metan ritmo</button>
-      </div>
-    </div>
-
-    <!-- LISTA DE CANCIONES Y MENSAJES -->
-    <div class="caja-lista">
-      <h2>📜 Lista de Canciones en Espera</h2>
-      <div id="lista-canciones">Cargando la lista de temas...</div>
-    </div>
-  </div>
-
-  <!-- FIREBASE SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDGbqAffr9eoeFmTwCVNTO6qSOwaJmQkHw",
-      authDomain: "appdjevento.firebaseapp.com",
-      databaseURL: "https://appdjevento-default-rtdb.firebaseio.com",
-      projectId: "appdjevento",
-      storageBucket: "appdjevento.firebasestorage.app",
-      messagingSenderId: "407123662465",
-      appId: "1:407123662465:web:7920863152e086a221df80"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    let configSecciones = {
-      habCanciones: true,
-      habMensajes: true,
-      habTermometro: true
-    };
-
-    // Escuchar la configuración activada por el DJ
-    db.ref("configSecciones").on("value", (snapshot) => {
-      const cfg = snapshot.val() || {};
-      
-      configSecciones.habCanciones = cfg.habCanciones !== false;
-      configSecciones.habMensajes = cfg.habMensajes !== false;
-      configSecciones.habTermometro = cfg.habTermometro !== false;
-
-      // Cambiar título y ocultar/mostrar botones de accesos según el estado de las canciones
-      const titulo = document.getElementById("titulo-principal");
-      const subtitulo = document.getElementById("subtitulo-principal");
-      const barraAccesos = document.getElementById("barra-accesos");
-
-      if (configSecciones.habCanciones) {
-        titulo.textContent = "🎧 Pide tu Canción";
-        subtitulo.textContent = "PUEDES ACUDIR A YOUTUBE O SPOTIFY PARA BUSCAR TU CANCIÓN 👇👇";
-        barraAccesos.style.display = "flex";
-      } else {
-        titulo.textContent = "💬 NOS INTERESA TU OPINIÓN";
-        subtitulo.textContent = "Déjanos tu mensaje, comentario o sugerencia para la fiesta";
-        barraAccesos.style.display = "none";
-      }
-
-      // Mostrar/Ocultar campos
-      document.getElementById("campo-cancion").style.display = configSecciones.habCanciones ? "block" : "none";
-      document.getElementById("campo-mensaje").style.display = configSecciones.habMensajes ? "block" : "none";
-      document.getElementById("seccion-termometro").style.display = configSecciones.habTermometro ? "block" : "none";
-
-      // Si todo está deshabilitado
-      const ambasDesactivadas = !configSecciones.habCanciones && !configSecciones.habMensajes;
-      document.getElementById("btnEnviar").style.display = ambasDesactivadas ? "none" : "block";
-      document.getElementById("msg-desactivado").style.display = ambasDesactivadas ? "block" : "none";
-    });
-
-    // Enviar Petición
-    function enviarPeticion() {
-      const cancionInput = document.getElementById("cancion").value.trim();
-      const notaInput = document.getElementById("nota").value.trim();
-      const invitadoInput = document.getElementById("invitado").value.trim();
-
-      if (!invitadoInput) {
-        alert("Por favor ingresa tu nombre.");
-        return;
-      }
-
-      if (configSecciones.habCanciones && !cancionInput && !notaInput) {
-        alert("Por favor ingresa al menos una canción o un mensaje.");
-        return;
-      }
-
-      const cancionFinal = cancionInput !== "" ? cancionInput : "Sin canción (Solo mensaje)";
-
-      const nuevaPeticion = {
-        cancion: cancionFinal,
-        nota: notaInput,
-        invitado: invitadoInput,
-        fecha: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        orden: Date.now()
-      };
-
-      db.ref("peticiones").push(nuevaPeticion, (error) => {
-        if (error) {
-          alert("Error al enviar: " + error.message);
-        } else {
-          alert("¡Tu mensaje fue enviado con éxito!");
-          document.getElementById("cancion").value = "";
-          document.getElementById("nota").value = "";
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
         }
-      });
-    }
 
-    // Votar en el Termómetro
-    function votar(tipo) {
-      db.ref("votos_animo/" + tipo).transaction((actual) => {
-        return (actual || 0) + 1;
-      }, (error, committed) => {
-        if (committed) {
-          alert("¡Gracias por tu voto! 🎉");
+        const configRef = firebase.database().ref('configSecciones');
+        const peticionesRef = firebase.database().ref('peticiones');
+        const votosRef = firebase.database().ref('votos');
+
+        firebase.database().ref('.info/connected').on('value', (snap) => {
+            const estadoEl = document.getElementById('estado-conexion');
+            if (snap.val() === true) {
+                estadoEl.textContent = '🟢 Conectado';
+                estadoEl.className = 'estado-conexion online';
+            } else {
+                estadoEl.textContent = '🔴 Desconectado';
+                estadoEl.className = 'estado-conexion offline';
+            }
+        });
+
+        let peticionesHabilitadas = true;
+        let termometroHabilitado = true;
+        let emojiSeleccionado = null; // Inicializado en null para validar el voto obligatorio
+
+        configRef.on('value', (snapshot) => {
+            const config = snapshot.val() || {};
+            peticionesHabilitadas = config.peticionesActivas !== false;
+            termometroHabilitado = config.termometroActivo !== false;
+
+            document.getElementById('sec-reproductores').style.display = peticionesHabilitadas ? 'flex' : 'none';
+            document.getElementById('sec-peticion').style.display = peticionesHabilitadas ? 'flex' : 'none';
+            document.getElementById('sec-termometro-mensaje').style.display = termometroHabilitado ? 'block' : 'none';
+
+            if (!peticionesHabilitadas && !termometroHabilitado) {
+                document.getElementById('btn-enviar').style.display = 'none';
+                document.getElementById('aviso-cerrado').style.display = 'block';
+            } else {
+                document.getElementById('btn-enviar').style.display = 'block';
+                document.getElementById('aviso-cerrado').style.display = 'none';
+            }
+        });
+
+        peticionesRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            const listaVivo = document.getElementById('lista-peticiones-vivo');
+            listaVivo.innerHTML = '';
+
+            if (!data) {
+                listaVivo.innerHTML = '<li style="font-size: 0.8rem; color: #64748b; text-align: center;">Sin peticiones aún.</li>';
+                return;
+            }
+
+            const arrayVivo = Object.keys(data).map(key => ({
+                key: key,
+                ...data[key]
+            }));
+
+            arrayVivo.sort((a, b) => {
+                const ordenA = a.orden !== undefined ? a.orden : a.fecha;
+                const ordenB = b.orden !== undefined ? b.orden : b.fecha;
+                return ordenA - ordenB;
+            });
+
+            arrayVivo.forEach((item) => {
+                if (item.tema) {
+                    const estaTocada = item.tocada || false;
+                    const li = document.createElement('li');
+                    li.className = 'item-vivo' + (estaTocada ? ' tocada' : '');
+                    li.innerHTML = `
+                        <span class="nombre-tema">🎵 <strong>${item.tema}</strong> <small style="color:#94a3b8">(${item.usuario || 'Anónimo'})</small></span>
+                        <span class="badge-v ${estaTocada ? 'badge-v-tocada' : 'badge-v-pendiente'}">
+                            ${estaTocada ? 'YA TOCADA' : 'PENDIENTE'}
+                        </span>
+                    `;
+                    listaVivo.appendChild(li);
+                }
+            });
+        });
+
+        function seleccionarEmoji(emoji, elemento) {
+            emojiSeleccionado = emoji;
+            document.querySelectorAll('.emoji-option').forEach(el => el.classList.remove('selected'));
+            elemento.classList.add('selected');
         }
-      });
-    }
 
-    // Escuchar y Renderizar Peticiones en Tiempo Real
-    db.ref("peticiones").on("value", (snapshot) => {
-      const contenedor = document.getElementById("lista-canciones");
-      contenedor.innerHTML = "";
+        const form = document.getElementById('form-pedir');
+        const mensajeConf = document.getElementById('mensaje-confirmacion');
 
-      const datos = snapshot.val();
-      if (!datos) {
-        contenedor.innerHTML = "<p style='color:#aaa; text-align:center;'>Aún no hay canciones en la lista. ¡Sé el primero en pedir una!</p>";
-        return;
-      }
+        function mostrarNotificacion() {
+            mensajeConf.style.display = 'block';
+            setTimeout(() => { mensajeConf.style.display = 'none'; }, 3000);
+        }
 
-      const lista = Object.keys(datos).map(key => datos[key])
-                          .sort((a, b) => (a.orden || 0) - (b.orden || 0));
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
 
-      lista.forEach((item, index) => {
-        const htmlNota = item.nota ? `<div class="mensaje-invitado">💬 "${item.nota}"</div>` : '';
+            const usuario = document.getElementById('nombre').value.trim() || 'Anónimo';
+            const tema = peticionesHabilitadas ? document.getElementById('cancion').value.trim() : '';
+            const opinion = termometroHabilitado ? document.getElementById('mensaje-sugerencia').value.trim() : '';
 
-        const div = document.createElement("div");
-        div.className = "tarjeta-cancion";
-        div.innerHTML = `
-          <div class="info-cancion">
-            <strong>#${index + 1} 🎶 ${item.cancion}</strong><br>
-            <small style="color:#aaa">Pedida por: ${item.invitado}</small>
-            ${htmlNota}
-          </div>
-        `;
-        contenedor.appendChild(div);
-      });
-    });
-  </script>
+            // Regla estricta: Si escribe mensaje, debe seleccionar un voto obligatoriamente
+            if (termometroHabilitado && opinion.length > 0 && !emojiSeleccionado) {
+                alert("Por favor selecciona tu voto (emoji) para enviar el mensaje.");
+                return;
+            }
 
+            // Regla estricta: Si selecciona voto, debe ingresar un mensaje
+            if (termometroHabilitado && emojiSeleccionado && opinion.length === 0) {
+                alert("Por favor escribe un mensaje o sugerencia junto con tu voto.");
+                return;
+            }
+
+            if (!tema && !opinion) {
+                alert("Por favor escribe una canción o un mensaje con su voto.");
+                return;
+            }
+
+            const timestamp = Date.now();
+
+            peticionesRef.push({
+                usuario: usuario,
+                tema: tema || null,
+                emoji: termometroHabilitado ? emojiSeleccionado : null,
+                opinion: opinion || null,
+                tocada: false,
+                fecha: timestamp,
+                orden: timestamp
+            })
+            .then(() => {
+                form.reset();
+                document.querySelectorAll('.emoji-option').forEach(el => el.classList.remove('selected'));
+                emojiSeleccionado = null;
+                mostrarNotificacion();
+            })
+            .catch((error) => alert("Error enviando datos: " + error.message));
+        });
+    </script>
 </body>
 </html>
