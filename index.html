@@ -276,11 +276,11 @@
                 El DJ ha pausado las peticiones por el momento.
             </div>
 
-            <button type="submit" class="btn-submit" id="btn-enviar">ENVIALE TU VOTO Y MENSAJE AL DJ 🚀</button>
+            <button type="submit" class="btn-submit" id="btn-enviar">ENVIA TU VOTO Y SUGERENCIAS AL DJ</button>
         </form>
 
         <div id="mensaje-confirmacion" class="mensaje-exito">
-            ¡Voto y mensaje enviados al DJ! 🎧
+            ¡Enviado al DJ exitosamente! 🎧
         </div>
     </div>
 
@@ -323,9 +323,17 @@
             // Cambio dinámico del título según el estado de "Termómetro y Mensajes"
             const tituloEl = document.getElementById('titulo-principal');
             if (termometroHabilitado) {
-                tituloEl.textContent = "NOS INTERESA TU OPINIÓN Y SUGERENCIAS";
+                tituloEl.textContent = "NOS INTERESA TU OPINION Y SUGERENCIAS";
             } else {
                 tituloEl.textContent = "🎵 Pide tu Canción";
+            }
+
+            // Cambio dinámico del texto del Botón de Disparo
+            const btnEnviar = document.getElementById('btn-enviar');
+            if (termometroHabilitado) {
+                btnEnviar.textContent = "ENVIA TU VOTO Y SUGERENCIAS AL DJ";
+            } else if (peticionesHabilitadas) {
+                btnEnviar.textContent = "PEDILE TU TEMA AL DJ";
             }
 
             document.getElementById('sec-reproductores').style.display = peticionesHabilitadas ? 'flex' : 'none';
@@ -333,10 +341,10 @@
             document.getElementById('sec-termometro-mensaje').style.display = termometroHabilitado ? 'block' : 'none';
 
             if (!peticionesHabilitadas && !termometroHabilitado) {
-                document.getElementById('btn-enviar').style.display = 'none';
+                btnEnviar.style.display = 'none';
                 document.getElementById('aviso-cerrado').style.display = 'block';
             } else {
-                document.getElementById('btn-enviar').style.display = 'block';
+                btnEnviar.style.display = 'block';
                 document.getElementById('aviso-cerrado').style.display = 'none';
             }
         });
