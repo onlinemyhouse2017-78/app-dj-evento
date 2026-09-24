@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pide tu Canción - Evento</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -12,7 +12,7 @@
             background-size: 400% 400%;
             animation: gradientBG 12s ease infinite;
             color: #f8fafc; 
-            padding: 20px; 
+            padding: 12px; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
@@ -31,7 +31,7 @@
             background: rgba(15, 23, 42, 0.78); 
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            padding: 25px; 
+            padding: 20px 16px; 
             border-radius: 16px; 
             border: 1px solid rgba(255, 0, 220, 0.3);
             box-shadow: 0 0 25px rgba(255, 0, 220, 0.25), inset 0 0 15px rgba(0, 243, 255, 0.15); 
@@ -43,12 +43,13 @@
         }
 
         h1 { 
-            font-size: 1.5rem; 
+            font-size: clamp(1.1rem, 4vw, 1.5rem); 
             color: #ff00dc; 
             text-shadow: 0 0 10px #ff00dc, 0 0 20px #ff00dc;
             text-align: center; 
             margin-bottom: 5px; 
             text-transform: uppercase;
+            line-height: 1.2;
         }
 
         .estado-conexion { display: block; text-align: center; font-size: 0.75rem; margin-bottom: 15px; font-weight: bold; }
@@ -155,7 +156,7 @@
         .termometro-container { display: flex; justify-content: space-around; margin: 10px 0 15px 0; }
         
         .emoji-option { 
-            font-size: 2rem; 
+            font-size: 2.2rem; 
             cursor: pointer; 
             opacity: 0.35; 
             transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); 
@@ -205,13 +206,13 @@
             color: white; 
             border: none; 
             border-radius: 8px; 
-            font-size: 0.95rem; 
+            font-size: 0.9rem; 
             font-weight: bold; 
             cursor: pointer; 
             transition: all 0.25s ease; 
             box-shadow: 0 0 15px rgba(255, 0, 220, 0.5);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
         .btn-submit:hover { 
@@ -320,7 +321,6 @@
             peticionesHabilitadas = config.peticionesActivas !== false;
             termometroHabilitado = config.termometroActivo !== false;
 
-            // Cambio dinámico del título según el estado de "Termómetro y Mensajes"
             const tituloEl = document.getElementById('titulo-principal');
             if (termometroHabilitado) {
                 tituloEl.textContent = "NOS INTERESA TU OPINION Y SUGERENCIAS";
@@ -328,7 +328,6 @@
                 tituloEl.textContent = "🎵 Pide tu Canción";
             }
 
-            // Cambio dinámico del texto del Botón de Disparo
             const btnEnviar = document.getElementById('btn-enviar');
             if (termometroHabilitado) {
                 btnEnviar.textContent = "ENVIA TU VOTO Y SUGERENCIAS AL DJ";
@@ -407,13 +406,11 @@
             const tema = peticionesHabilitadas ? document.getElementById('cancion').value.trim() : '';
             const opinion = termometroHabilitado ? document.getElementById('mensaje-sugerencia').value.trim() : '';
 
-            // Regla estricta: Si escribe mensaje, debe seleccionar un voto obligatoriamente
             if (termometroHabilitado && opinion.length > 0 && !emojiSeleccionado) {
                 alert("Por favor selecciona tu voto (emoji) para enviar el mensaje.");
                 return;
             }
 
-            // Regla estricta: Si selecciona voto, debe ingresar un mensaje
             if (termometroHabilitado && emojiSeleccionado && opinion.length === 0) {
                 alert("Por favor escribe un mensaje o sugerencia junto con tu voto.");
                 return;
